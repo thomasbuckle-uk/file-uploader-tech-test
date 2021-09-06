@@ -1,38 +1,14 @@
-version: '3.8'
-
+version: '3.7'
 services:
-  database:
-    container_name: database
-    image: postgres:13
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: file_upload
-    ports:
-      - "15432:5432"
-  php-fpm:
-    container_name: php-fpm
-    build:
-      context: .deployments/php-fpm
-    depends_on:
-      - database
-    environment:
-      - APP_ENV=${APP_ENV}
-      - APP_SECRET=${APP_SECRET}
-      - DATABASE_URL=${DATABASE_URL}
-    volumes:
-      - .:/var/www
-  nginx:
-    container_name: nginx
-    build:
-      context: .deployments/nginx
-    volumes:
-      - .:/var/www
-      - ./nginx/nginx.conf:/etc/nginx/
-      - ./nginx/sites:/etc/nginx/sites-available/
-      - ./nginx/conf.d:/etc/nginx/conf.d/
-    depends_on:
-      - php-fpm
-    ports:
-      - "80:80"
-      - "443:443"
+    database:
+        image: 'postgres:alpine'
+        environment:
+            POSTGRES_PASSWORD: main
+            POSTGRES_USER: main
+            POSTGRES_DB: main
+        ports:
+            # To allow the host machine to access the ports below, modify the lines below.
+            # For example, to allow the host to connect to port 3306 on the container, you would change
+            # "3306" to "3306:3306". Where the first port is exposed to the host and the second is the container port.
+            # See https://docs.docker.com/compose/compose-file/#ports for more information.
+            - '5432'
