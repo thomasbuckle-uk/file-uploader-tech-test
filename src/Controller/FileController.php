@@ -20,7 +20,6 @@ class FileController extends AbstractController
 {
     private LoggerInterface $logger;
     private FileManager $fileManager;
-
     public function __construct(LoggerInterface $logger, FileManager $fileManager)
     {
         $this->logger = $logger;
@@ -36,12 +35,29 @@ class FileController extends AbstractController
      *     description="Returns list of files available for download",
      * )
      **/
-    public function listFiles(
+    public function files(
         Request $request
     ): Response {
         $fileRepository = $this->getDoctrine()->getRepository(File::class);
         $fileList = $fileRepository->findAll();
         return $this->json($fileList);
+    }
+
+    #[Route('/downloadable/', methods: ['GET'])]
+    /**
+     * Return list of File Download Paths
+     * @OA\Tag(name="Files Managment")
+     * @OA\Response(
+     *     response=200,
+     *     description="Return list of File Download Paths",
+     * )
+     **/
+    public function listFileDownloadUrls(Request $request)
+    {
+        $fileRepository = $this->getDoctrine()->getRepository(File::class);
+
+
+        return $this->json($fileRepository->find(1)->getDownloadPath($this->getParameter('app.target_dir')));
     }
 
 //  Using POST not PUT for file upload = means this is non-idempotent

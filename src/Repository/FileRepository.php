@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\File;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @method File|null find($id, $lockMode = null, $lockVersion = null)
@@ -26,6 +27,7 @@ class FileRepository extends ServiceEntityRepository
             ->getResult();
 
     }
+
     // /**
     //  * @return File[] Returns an array of File objects
     //  */

@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\File;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -35,9 +33,6 @@ class FileManager
 
     }
 
-    /**
-     * @throws ORMException
-     */
     public function upload(UploadedFile $file): File
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);

@@ -3,8 +3,10 @@
 ### Features
 - OpenAPI v3 Compliant API
 - API Documentation and Playground
-- Ability to upload files and store on local server (In future filesystem should be abstracted away
-)
+- Ability to upload files and store on local server
+  - Files uploaded to ./public/storage although this is configurable in services.yaml
+  - (In future filesystem should be abstracted away
+  )
 - Persistence using Postgres Database
 - Ability to list all available files
 

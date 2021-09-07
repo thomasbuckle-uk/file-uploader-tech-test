@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=FileRepository::class)
@@ -15,17 +16,17 @@ class File
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fileName;
+    private ?string $fileName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $originalFilename;
+    private ?string $originalFilename;
 
     public function getId(): ?int
     {
@@ -55,4 +56,10 @@ class File
 
         return $this;
     }
+
+    public function getDownloadPath($targetDir): string
+    {
+        return $targetDir . '/'. $this->getFileName();
+    }
+
 }
