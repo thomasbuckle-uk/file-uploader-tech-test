@@ -68,7 +68,17 @@ class FileController extends AbstractController
         }
         return $this->json($fileUrls);
     }
+
+
     #[Route('/download/{fileName}', methods: ['GET'])]
+    /**
+     * Downloads File Based from Slug URI of matching filename in Database
+     * @OA\Tag(name="Files Managment")
+     * @OA\Response(
+     *     response=200,
+     *     description="Requested File as a BinaryFileResponse",
+     * )
+     **/
     public function downloadFile(File $file): Response
     {
         $response = new BinaryFileResponse( $file->getDownloadPath($this->getParameter('app.target_dir')));
