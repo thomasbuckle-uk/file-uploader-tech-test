@@ -76,13 +76,11 @@ class FileController extends AbstractController
 
         try {
             $filename = $this->fileManager->upload($request->files->get('file'));
-            return new Response($filename, 200);
+
+            return new Response(json_encode(['storedFilename' => $filename], JSON_THROW_ON_ERROR), 200);
         } catch (\Throwable $e) {
             throw new Exception($e->getMessage(), $e->getPrevious());
         }
-
-
-
 
 
     }

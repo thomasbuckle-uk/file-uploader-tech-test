@@ -20,6 +20,9 @@ class FileManager
         $this->targetDir = $targetDir;
         $this->slugger = $slugger;
     }
+    public function listFiles() :array {
+
+    }
 
     public function upload(UploadedFile $file) :string
     {
