@@ -16,7 +16,7 @@ class FileManager
 
     public function __construct(LoggerInterface $logger, string $targetDir, SluggerInterface $slugger)
     {
-        $this->logger = $logger
+        $this->logger = $logger;
         $this->targetDir = $targetDir;
         $this->slugger = $slugger;
     }
