@@ -20,6 +20,7 @@ class FileController extends AbstractController
 {
     private LoggerInterface $logger;
     private FileManager $fileManager;
+
     public function __construct(LoggerInterface $logger, FileManager $fileManager)
     {
         $this->logger = $logger;
@@ -40,6 +41,7 @@ class FileController extends AbstractController
     ): Response {
         $fileRepository = $this->getDoctrine()->getRepository(File::class);
         $fileList = $fileRepository->findAll();
+
         return $this->json($fileList);
     }
 
@@ -52,12 +54,16 @@ class FileController extends AbstractController
      *     description="Return list of File Download Paths",
      * )
      **/
-    public function listFileDownloadUrls(Request $request)
+    public function listFileDownloadUrls(Request $request): JsonResponse
     {
         $fileRepository = $this->getDoctrine()->getRepository(File::class);
 
-
-        return $this->json($fileRepository->find(1)->getDownloadPath($this->getParameter('app.target_dir')));
+        $files = $fileRepository->findAll();
+        $fileUrls = [];
+        foreach ($files as $file) {
+            $fileUrls += [$file->getOriginalFilename() => $file->getDownloadPath($this->getParameter('app.target_dir'))];
+        }
+        return $this->json($fileUrls);
     }
 
 //  Using POST not PUT for file upload = means this is non-idempotent
@@ -97,6 +103,7 @@ class FileController extends AbstractController
         $file = $request->files->get('file');
         try {
             $filename = $this->fileManager->upload($file);
+
             return new Response(json_encode(['storedFilename' => $filename], JSON_THROW_ON_ERROR), 200);
         } catch (\Throwable $e) {
             throw new Exception($e->getMessage(), $e->getPrevious());
