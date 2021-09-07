@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\File;
 use App\Service\FileManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,7 +39,9 @@ class FileController extends AbstractController
     public function listFiles(
         Request $request
     ): Response {
-
+        $fileRepository = $this->getDoctrine()->getRepository(File::class);
+        $fileList = $fileRepository->findAll();
+        return $this->json($fileList);
     }
 
 //  Using POST not PUT for file upload = means this is non-idempotent
@@ -73,10 +78,9 @@ class FileController extends AbstractController
             return new Response("error file not in request body", 500);
         }
         $this->logger->debug(json_encode($_FILES, JSON_THROW_ON_ERROR));
-
+        $file = $request->files->get('file');
         try {
-            $filename = $this->fileManager->upload($request->files->get('file'));
-
+            $filename = $this->fileManager->upload($file);
             return new Response(json_encode(['storedFilename' => $filename], JSON_THROW_ON_ERROR), 200);
         } catch (\Throwable $e) {
             throw new Exception($e->getMessage(), $e->getPrevious());
