@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,12 @@ use OpenApi\Annotations as OA;
 #[Route('/api/files')]
 class FileController extends AbstractController
 {
+    private LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     #[Route('/', methods: ['GET'])]
     /**
@@ -55,7 +62,8 @@ class FileController extends AbstractController
      * )
      **/
 
-    public function uploadFile(): File
+    public function uploadFile(Request $request): Response
     {
+
     }
 }
