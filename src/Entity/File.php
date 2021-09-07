@@ -57,9 +57,9 @@ class File
         return $this;
     }
 
-    #[Pure] public function getDownloadPath($targetDir): string
+    #[Pure] public function getDownloadPath($targetDir = null): string
     {
-        return $targetDir . '/'. $this->getFileName();
+        return $targetDir . '/' . $this->getFileName();
     }
 
 }
