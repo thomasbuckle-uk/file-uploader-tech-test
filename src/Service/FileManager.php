@@ -7,6 +7,7 @@ use App\Entity\File;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -38,7 +39,10 @@ class FileManager
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
         $fileName = $safeFilename.'-'.uniqid('', true).'.'.$file->guessExtension();
-
+        if ($file->getSize() > 1000000) {
+            $sizeMb = number_format($file->getSize() / 1000000, 2);
+            throw new FormSizeFileException("File of size {$sizeMb}MB is over the 1MB File Limit");
+        }
         try {
             $file->move($this->getTargetDir(), $fileName);
         } catch (FileException $e) {

@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,11 +126,14 @@ class FileController extends AbstractController
         $file = $request->files->get('file');
         try {
             $filename = $this->fileManager->upload($file);
-
-            return new Response(json_encode(['storedFilename' => $filename], JSON_THROW_ON_ERROR), 200);
-        } catch (\Throwable $e) {
+        }
+        catch (FormSizeFileException $e ) {
+            return new JsonResponse($e->getMessage(), 413);
+        }
+        catch (\Throwable $e) {
             throw new Exception($e->getMessage(), $e->getPrevious());
         }
+        return new Response(json_encode(['storedFilename' => $filename], JSON_THROW_ON_ERROR), 200);
 
 
     }
